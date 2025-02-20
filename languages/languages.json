@@ -1,0 +1,11 @@
+{
+    "en": {
+      "start_message": "Hello World",
+      "wrong_command": "Wrong Command"
+    },
+    "uz": {
+      "start_message": "Salom Dunyo",
+      "wrong_command": "Notogri komanda"
+    }
+  }
+  
