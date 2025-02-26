@@ -16,6 +16,7 @@ if config.config_file_name is not None:
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///database.db")
 
 
+
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 target_metadata = Base.metadata

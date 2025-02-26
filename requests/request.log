@@ -1,9 +1,0 @@
-2025-02-20 10:25:06,071 - INFO - Bot started successfully!
-2025-02-20 10:25:06,108 - INFO - Start polling
-2025-02-20 10:25:06,597 - INFO - Run polling for bot @waterasdbot id=8170384586 - 'Water'
-2025-02-20 10:25:17,301 - INFO - Update id=331449041 is handled. Duration 816 ms by bot id=8170384586
-2025-02-20 10:25:31,884 - INFO - Update id=331449042 is handled. Duration 197 ms by bot id=8170384586
-2025-02-20 10:26:18,347 - WARNING - Received SIGINT signal
-2025-02-20 10:26:18,350 - INFO - Polling stopped for bot @waterasdbot id=8170384586 - 'Water'
-2025-02-20 10:26:18,350 - INFO - Polling stopped
-2025-02-20 10:26:18,478 - WARNING - Received SIGINT signal
