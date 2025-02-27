@@ -6,7 +6,6 @@ from config.bot_setup import bot, dp
 from contextlib import asynccontextmanager
 
 
-app = FastAPI()  
 
 if WEBHOOK_MODE:
     @asynccontextmanager
@@ -20,9 +19,8 @@ if WEBHOOK_MODE:
         uvicorn.run(app, host="0.0.0.0", port=PORT)
 
 else:
-    @app.on_event("startup")
-    async def start_polling():
-        asyncio.create_task(dp.start_polling(bot))  
+    async def main():
+        await dp.start_polling(bot)
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
+    if __name__ == "__main__":
+        asyncio.run(main())

@@ -13,7 +13,6 @@ WEBHOOK_MODE = os.getenv("WEBHOOK", "false").strip().lower() == "true"
 WEBHOOK_URL = os.getenv("WEBHOOK_URL", "").strip()
 PORT = int(os.getenv("PORT", 8000))
 
-
 BOT_LANGUAGE = os.getenv("BOT_LANGUAGE", "en").strip().lower()
 
 
