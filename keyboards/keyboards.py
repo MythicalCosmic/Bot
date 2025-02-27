@@ -1,13 +1,13 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-PREMIUM_KEY = "🌟 Upgrade to Premium"  
-SMM_KEY = "📣 Social Media Services"  
-CONTACT = "📞💻 Contact the Developer"
-SURE_OK = "✔️ Yes, I agree"  
-SURE_NOT = "❌ No, go back"  
-BUY_NOW = "💰 Purchase Now"  
-BACK = "🔙 Back"  
-CLICK_BUTTON = "💳 Click"
-PAYME =  "💳 Payme"
+PREMIUM_KEY = "🌟 Premiumga olish"  
+SMM_KEY = "📣 SMM xizmati"  
+CONTACT = "📞💻 Dasturchi bilan bog‘lanish"  
+SURE_OK = "✔️ Ha, roziman"  
+SURE_NOT = "❌ Yo‘q, orqaga qaytish"  
+BUY_NOW = "💰 Sotib olish"  
+BACK = "🔙 Orqaga"  
+CLICK_BUTTON = "💳 Click"  
+PAYME = "💳 Payme"
 
 
 main_keys = ReplyKeyboardMarkup(

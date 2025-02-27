@@ -1,33 +1,38 @@
-from aiogram import Router, types
-from aiogram.types import Message, FSInputFile, CallbackQuery, LabeledPrice
+from aiogram import Router, types, Bot
+from aiogram.types import Message, CallbackQuery, LabeledPrice, PreCheckoutQuery
 from aiogram.filters import Command
 from config.settings import get_translation
 from database.database import *
-from utils.utils import add_user
+from utils.utils import add_user, add_payement_movement
 from keyboards.keyboards import *
 from dotenv import load_dotenv
+from config.bot_setup import bot
+from datetime import datetime
 
-load_dotenv()
+load_dotenv(override=True)
 
 CLICK_TOKEN = os.getenv("CLICK_TOKEN", "0")
 PAYME_TOKEN = os.getenv("PAYME_TOKEN", "0")
 
 router = Router()  
 
-@router.message(Command("start"))  
+@router.message(Command("start"))
 async def say_hi(message: types.Message):
     telegram_id = message.from_user.id
     username = message.from_user.username
-    paht_video = "./media/videos/video.mp4"
+    channel_id = -1002312782001 
+    video_message_id = 6  
 
     session = SessionLocal()
-
     user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
+
     if user:
-        await message.reply_video(video=FSInputFile(paht_video), caption=get_translation('start_message'), reply_markup=main_keys, parse_mode='HTML')
+        await bot.forward_message(chat_id=message.chat.id, from_chat_id=channel_id, message_id=video_message_id)
+        await message.reply(get_translation('start_message'), reply_markup=main_keys, parse_mode='HTML')
     else:
         add_user(telegram_id, username, step="START")
-        await message.reply_video(video=FSInputFile(paht_video), caption=get_translation('start_message'), reply_markup=main_keys, parse_mode='HTML')
+        await bot.forward_message(chat_id=message.chat.id, from_chat_id=channel_id, message_id=video_message_id)
+        await message.reply(get_translation('start_message'), reply_markup=main_keys, parse_mode='HTML')
 
 
 @router.message(lambda message: message.text == PREMIUM_KEY)
@@ -64,11 +69,8 @@ async def handle_alright(message: Message):
     '💳 click': CLICK_TOKEN,
     '💳 payme': PAYME_TOKEN
     }   
-
     payment_type = payment_tokens.get(payment_type, payment_type)
-
     session = SessionLocal()
-    
     try:
         user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
         
@@ -81,7 +83,6 @@ async def handle_alright(message: Message):
     
     finally:
         session.close()  
-
     prices = [LabeledPrice(label="Telegram Premium Subscription", amount=1000000)] 
     
     await message.reply_invoice(
@@ -94,6 +95,24 @@ async def handle_alright(message: Message):
         start_parameter="premium_upgrade",
         reply_markup=back_from_yes_button
     )
+
+
+@router.pre_checkout_query(lambda _: True)  
+async def pre_checkout_handler(pre_checkout_query: PreCheckoutQuery, bot: Bot):
+    await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
+
+
+
+@router.message(lambda message: message.successful_payment is not None)
+async def successful_payment_handler(message: Message):
+    telegram_id = message.from_user.id
+    total_price = message.successful_payment.total_amount / 100  
+    generated_link = message.successful_payment.invoice_payload 
+    date = datetime.now()
+    
+    add_payement_movement(telegram_id, date, generated_link, total_price)
+    
+    await message.reply(get_translation('thanks'), parse_mode='HTML', reply_markup=back_button)
 
 
 
@@ -155,7 +174,6 @@ async def handle_back(message: Message):
     await message.reply(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys)
 
 
-
 @router.message()
 async def fallback_handler(message: Message):
     session = SessionLocal()
@@ -168,3 +186,8 @@ async def fallback_handler(message: Message):
 
 
 
+
+
+@router.channel_post()
+async def get_video_id(message: types.Message):
+    print(f"Video message ID: {message.message_id}")

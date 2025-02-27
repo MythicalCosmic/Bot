@@ -3,7 +3,7 @@ import json
 from dotenv import load_dotenv
 import logging
 
-load_dotenv()
+load_dotenv(override=True)
 
 TOKEN = os.getenv("BOT_TOKEN")
 if not TOKEN:
@@ -40,3 +40,5 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 logger.info("Bot started successfully!")
+
+print(BOT_LANGUAGE)
