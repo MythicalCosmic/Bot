@@ -6,6 +6,8 @@ SURE_OK = "✔️ Yes, I agree"
 SURE_NOT = "❌ No, go back"  
 BUY_NOW = "💰 Purchase Now"  
 BACK = "🔙 Back"  
+CLICK_BUTTON = "💳 Click"
+PAYME =  "💳 Payme"
 
 
 main_keys = ReplyKeyboardMarkup(
@@ -26,6 +28,14 @@ sure_buttons = ReplyKeyboardMarkup(
     one_time_keyboard=True
 )
 
+payment_buttons = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text=CLICK_BUTTON), KeyboardButton(text=PAYME)],
+        [KeyboardButton(text=BACK)]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
 
 
 back_from_yes_button = InlineKeyboardMarkup(

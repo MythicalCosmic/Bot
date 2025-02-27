@@ -5,9 +5,12 @@ from config.settings import get_translation
 from database.database import *
 from utils.utils import add_user
 from keyboards.keyboards import *
+from dotenv import load_dotenv
 
-CLICK_TOKEN = '371317599:TEST:1740546139453'
-PAYME_TOKEN = '371317599:TEST:1740549200011'
+load_dotenv()
+
+CLICK_TOKEN = os.getenv("CLICK_TOKEN", "0")
+PAYME_TOKEN = os.getenv("PAYME_TOKEN", "0")
 
 router = Router()  
 
@@ -38,33 +41,60 @@ async def handle_premium(message: Message):
     user.step = 'PREMIUM_WARNING_HANDLER'
     session.commit()
     await message.reply(get_translation('premium_warning'), reply_markup=sure_buttons, parse_mode='HTML')
-
-
+    
 
 @router.message(lambda message: message.text == SURE_OK)
+async def handle_payement(message: Message):
+        session = SessionLocal()
+        telegram_id = message.from_user.id
+        user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
+        if not user: 
+            await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+            return
+        user.step = 'PAYMENT'
+        session.commit()
+        await message.reply(get_translation('payment_question'), reply_markup=payment_buttons, parse_mode='HTML')
+
+
+@router.message(lambda message: message.text in [CLICK_BUTTON, PAYME])
 async def handle_alright(message: Message):
     telegram_id = message.from_user.id
+    payment_type = message.text.strip().capitalize()
+    payment_tokens = {
+    '💳 click': CLICK_TOKEN,
+    '💳 payme': PAYME_TOKEN
+    }   
+
+    payment_type = payment_tokens.get(payment_type, payment_type)
+
     session = SessionLocal()
     
-    user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
-    
-    if not user:
-        await message.reply(get_translation('wrong_command'), parse_mode='HTML')
-        return
+    try:
+        user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
+        
+        if not user:
+            await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+            return
 
-    user.step = 'PREMIUM_ALRIGHT_HANDLER'
-    session.commit()
+        user.step = 'PREMIUM_ALRIGHT_HANDLER'
+        session.commit()
+    
+    finally:
+        session.close()  
+
     prices = [LabeledPrice(label="Telegram Premium Subscription", amount=1000000)] 
+    
     await message.reply_invoice(
         title="Telegram Premium",
         description="Unlock Telegram Premium features such as ad-free browsing, faster downloads, and exclusive stickers.",
         payload="premium_subscription",
-        provider_token=CLICK_TOKEN,  
+        provider_token=payment_type,  
         currency="UZS",
         prices=prices,
         start_parameter="premium_upgrade",
         reply_markup=back_from_yes_button
     )
+
 
 
 

@@ -1,4 +1,4 @@
-from database.database import TelegramUser, SessionLocal
+from database.database import TelegramUser, SessionLocal, PaymentMovement
 
 def add_user(telegram_id, username, step):
     session = SessionLocal()
@@ -16,3 +16,15 @@ def add_user(telegram_id, username, step):
         return True
     session.close()
     return False
+
+def add_payement_movement(telegram_id, date, generated_link, total_price):
+    session = SessionLocal()
+    new_payment_movement = PaymentMovement(
+        telegram_id=telegram_id,
+        date=date,
+        generated_link=generated_link,
+        total_price=total_price
+    )
+    session.add(new_payment_movement)
+    session.commit()
+    return True
