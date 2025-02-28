@@ -1,8 +1,9 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, DECIMAL
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, DECIMAL, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
 load_dotenv(override=True)
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///database.db")
@@ -19,6 +20,8 @@ class TelegramUser(Base):
     telegram_id = Column(Integer, unique=True, index=True)
     username = Column(String(255), nullable=True)
     step = Column(String(250))
+    created_at = Column(DateTime, default=func.now())  
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now()) 
 
 
 class PaymentMovement(Base):
@@ -28,4 +31,7 @@ class PaymentMovement(Base):
     telegram_id = Column(Integer, ForeignKey('telegram_users.id'))
     date = Column(Date)
     generated_link = Column(String)
+    payment_type = Column(String)
     total_price = Column(DECIMAL(20, 2))
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())

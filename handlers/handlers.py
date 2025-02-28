@@ -7,7 +7,7 @@ from aiogram.filters import Command
 
 from config.settings import get_translation
 from database.database import *
-from utils.utils import add_user, add_payement_movement
+from utils.utils import add_user, add_payement_movement,generate_one_time_link
 from keyboards.keyboards import *
 from dotenv import load_dotenv
 from config.bot_setup import bot
@@ -67,6 +67,7 @@ async def handle_premium(message: Message):
         user.step = 'PREMIUM_WARNING_HANDLER'
         session.commit()
 
+
         await message.reply(get_translation('premium_warning'), reply_markup=sure_buttons, parse_mode='HTML')
     except Exception as e:
         error_message = (
@@ -115,7 +116,6 @@ async def handle_alright(message: Message):
         '💳 click': CLICK_TOKEN,
         '💳 payme': PAYME_TOKEN
     }
-
     session = SessionLocal()
     try:
         user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
@@ -123,16 +123,15 @@ async def handle_alright(message: Message):
         if not user:
             await message.reply(get_translation('wrong_command'), parse_mode='HTML')
             return
-
-        user.step = 'PREMIUM_ALRIGHT_HANDLER'
+        user.step = f'PREMIUM_ALRIGHT_HANDLER {payment_type.removeprefix("💳 ").upper()}'
         session.commit()
 
         prices = [LabeledPrice(label="Telegram Premium Subscription", amount=1000000)]
 
         await message.reply_invoice(
-            title="Telegram Premium",
-            description="Unlock Telegram Premium features such as ad-free browsing, faster downloads, and exclusive stickers.",
-            payload="premium_subscription",
+            title=f"Telegram Premium {payment_type.removeprefix('💳 ').upper()}",
+            description="Telegram premium bilan koplab narsalari oching!.",
+            payload=f"{payment_type.removeprefix('💳 ').upper()}",
             provider_token=payment_tokens.get(payment_type, CLICK_TOKEN),
             currency="UZS",
             prices=prices,
@@ -172,10 +171,12 @@ async def successful_payment_handler(message: Message):
     try:
         telegram_id = message.from_user.id
         total_price = message.successful_payment.total_amount / 100
-        generated_link = message.successful_payment.invoice_payload
+        payment_type = message.successful_payment.invoice_payload
+        generated_link = await generate_one_time_link(bot, "@itasdas")
+
         date = datetime.now()
 
-        add_payement_movement(telegram_id, date, generated_link, total_price)
+        add_payement_movement(telegram_id, date, generated_link, total_price, payment_type)
         await message.reply(get_translation('thanks'), parse_mode='HTML', reply_markup=back_button)
     except Exception as e:
         error_message = (
