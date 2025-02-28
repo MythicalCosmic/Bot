@@ -177,7 +177,7 @@ async def successful_payment_handler(message: Message):
 
         date = datetime.now()
 
-        add_payement_movement(telegram_id, date, generated_link, total_price, payment_type)
+        add_payement_movement(telegram_id, generated_link, total_price, payment_type)
         await message.reply(get_translation('thanks'), parse_mode='HTML', reply_markup=back_button)
         await message.answer(generated_link)
     except Exception as e:

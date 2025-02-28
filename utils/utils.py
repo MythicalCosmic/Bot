@@ -20,11 +20,10 @@ def add_user(telegram_id, username, step):
     session.close()
     return False
 
-def add_payement_movement(telegram_id, date, generated_link, total_price, payment_type):
+def add_payement_movement(telegram_id, generated_link, total_price, payment_type):
     session = SessionLocal()
     new_payment_movement = PaymentMovement(
         telegram_id=telegram_id,
-        date=date,
         generated_link=generated_link,
         total_price=total_price,
         payment_type=payment_type

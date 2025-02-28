@@ -29,7 +29,6 @@ class PaymentMovement(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     telegram_id = Column(Integer, ForeignKey('telegram_users.id'))
-    date = Column(Date)
     generated_link = Column(String)
     payment_type = Column(String)
     total_price = Column(DECIMAL(20, 2))
