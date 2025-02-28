@@ -32,7 +32,7 @@ LOG_FILE = os.path.join(LOGS_DIR, "request.log")
 
 logging.basicConfig(
     filename=LOG_FILE,
-    level=logging.INFO,
+    level=logging.WARNING,
     format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8"
 )
@@ -40,4 +40,4 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.info("Bot started successfully!")
 
-print(BOT_LANGUAGE)
+

@@ -16,9 +16,10 @@ load_dotenv(override=True)
 
 CLICK_TOKEN = os.getenv("CLICK_TOKEN", "0")
 PAYME_TOKEN = os.getenv("PAYME_TOKEN", "0")
-CHANNEL_ID = os.getenv("CHANNEL_ID", "0")
+CHANNEL_ID = os.getenv("VIDEO_CHANNEL_ID", "0")
 VIDEO_MESSAGE_ID = os.getenv("VIDEO_MESSAGE_ID", "0")
-ADMIN_ID = 5965983282
+ADMIN_ID = os.getenv("ADMIN_ID", "0")
+LINK_CHANNEL_ID = os.getenv('LINK_CHANNEL_ID')
 
 router = Router()
 
@@ -48,7 +49,6 @@ async def say_hi(message: types.Message):
             f"Traceback:\n{traceback.format_exc()}"
         )
         await bot.send_message(ADMIN_ID, error_message, parse_mode='HTML')
-        print(f"Error in start command: {e}")
     finally:
         session.close()
 
@@ -172,12 +172,14 @@ async def successful_payment_handler(message: Message):
         telegram_id = message.from_user.id
         total_price = message.successful_payment.total_amount / 100
         payment_type = message.successful_payment.invoice_payload
-        generated_link = await generate_one_time_link(bot, "@itasdas")
+        generated_link = await generate_one_time_link(bot, LINK_CHANNEL_ID)
+
 
         date = datetime.now()
 
         add_payement_movement(telegram_id, date, generated_link, total_price, payment_type)
         await message.reply(get_translation('thanks'), parse_mode='HTML', reply_markup=back_button)
+        await message.answer(generated_link)
     except Exception as e:
         error_message = (
             f"❌ Payment success handler error:\n"
@@ -317,15 +319,15 @@ async def fallback_handler(message: Message):
         session.close()
 
 
-@router.channel_post()
-async def get_video_id(message: types.Message):
-    try:
-        print(f"Video message ID: {message.message_id}")
-    except Exception as e:
-        error_message = (
-            f"❌ Channel post handler error:\n"
-            f"Message ID: {message.message_id}\n"
-            f"Error: {str(e)}\n"
-            f"Traceback:\n{traceback.format_exc()}"
-        )
-        await bot.send_message(ADMIN_ID, error_message)
+# @router.channel_post()
+# async def get_video_id(message: types.Message):
+#     try:
+#         print(f"Video message ID: {message.message_id}")
+#     except Exception as e:
+#         error_message = (
+#             f"❌ Channel post handler error:\n"
+#             f"Message ID: {message.message_id}\n"
+#             f"Error: {str(e)}\n"
+#             f"Traceback:\n{traceback.format_exc()}"
+#         )
+#         await bot.send_message(ADMIN_ID, error_message)

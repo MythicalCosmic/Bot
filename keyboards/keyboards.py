@@ -33,14 +33,12 @@ payment_buttons = ReplyKeyboardMarkup(
         [KeyboardButton(text=BACK)]
     ],
     resize_keyboard=True,
-    one_time_keyboard=True
 )
 
 
 back_from_yes_button = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text=BUY_NOW, pay=True)],
-        [InlineKeyboardButton(text=SURE_NOT, callback_data="go_back")]
+        [InlineKeyboardButton(text=BUY_NOW, pay=True)]
     ]
 )
 
