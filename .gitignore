@@ -4,3 +4,8 @@ database.db
 .idea
 .DS_Store
 requests/request.log
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
