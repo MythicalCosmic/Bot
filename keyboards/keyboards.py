@@ -1,8 +1,8 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-PREMIUM_KEY = "🌟 Premiumga olish"  
+PREMIUM_KEY = "🌟 Yopiq kanalda qatnashish"
 SMM_KEY = "📣 SMM xizmati"  
 CONTACT = "📞💻 Dasturchi bilan bog‘lanish"  
-SURE_OK = "✔️ Ha, roziman"  
+SURE_OK = "🚀 Kanalga qo'shilmoqchiman"
 SURE_NOT = "❌ Yo‘q, orqaga qaytish"  
 BUY_NOW = "💰 Sotib olish"  
 BACK = "🔙 Orqaga"  
@@ -15,8 +15,7 @@ main_keys = ReplyKeyboardMarkup(
         [KeyboardButton(text=PREMIUM_KEY), KeyboardButton(text=SMM_KEY)],
         [KeyboardButton(text=CONTACT)]
     ],
-    resize_keyboard=True,
-    one_time_keyboard=True
+    resize_keyboard=True
 )
 
 sure_buttons = ReplyKeyboardMarkup(
@@ -51,4 +50,10 @@ back_button = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True,
     one_time_keyboard=True
+)
+
+smm_button = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text=CLICK_BUTTON, url="https://telegram.org/JasonDevOps")],
+    ]
 )
