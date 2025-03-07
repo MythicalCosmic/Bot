@@ -60,7 +60,8 @@ async def say_hi(message: types.Message):
         user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
         if not user:
             add_user(telegram_id, username, step="START")
-        
+        user.step = "START"
+        session.commit()
         await bot.forward_message(chat_id=message.chat.id, from_chat_id=CHANNEL_ID, message_id=VIDEO_MESSAGE_ID)
         await message.reply(get_translation('start_message'), reply_markup=main_keys, parse_mode='HTML')
     except Exception as e:
@@ -113,9 +114,6 @@ async def handle_alright(message: Message):
         user = check_user_and_state(session, message.from_user.id, 'PAYMENT')
         if not user:
             user = check_user_and_state(session, message.from_user.id)
-            if user:
-                await send_state_message(message, user)
-            return
 
         payment_type = message.text.strip().lower()
         payment_tokens = {
