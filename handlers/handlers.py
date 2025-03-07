@@ -123,7 +123,7 @@ async def handle_alright(message: Message):
         if not user:
             await message.reply(get_translation('wrong_command'), parse_mode='HTML')
             return
-        user.step = f'PREMIUM_ALRIGHT_HANDLER {payment_type.removeprefix("💳 ").upper()}'
+        user.step = f'PREMIUM_ALRIGHT_HANDLER'
         session.commit()
 
         prices = [LabeledPrice(label="Telegram Premium Subscription", amount=1000000)]
@@ -170,22 +170,55 @@ async def successful_payment_handler(message: Message):
     total_price = 0
     try:
         telegram_id = message.from_user.id
-        total_price = message.successful_payment.total_amount / 100
+        username = message.from_user.username or "No username"
+        first_name = message.from_user.first_name or "No first name"  
+        last_name = message.from_user.last_name or "No last name"
+        total_price = message.successful_payment.total_amount / 100  
         payment_type = message.successful_payment.invoice_payload
         generated_link = await generate_one_time_link(bot, LINK_CHANNEL_ID)
+        payment_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        currency = message.successful_payment.currency
+        provider_payment_charge_id = message.successful_payment.provider_payment_charge_id
+        telegram_payment_charge_id = message.successful_payment.telegram_payment_charge_id
 
+        payment_movement_id = add_payement_movement(telegram_id, generated_link, total_price, payment_type)
 
-        date = datetime.now()
-
-        add_payement_movement(telegram_id, generated_link, total_price, payment_type)
         await message.reply(get_translation('thanks'), parse_mode='HTML', reply_markup=back_button)
         await message.answer(generated_link)
+
+        admin_message = (
+            f"✅ Successful Payment Received!\n\n"
+            f"User ID: {telegram_id}\n"
+            f"Username: @{username}\n"
+            f"First Name: {first_name}\n"  
+            f"Last Name: {last_name}\n"
+            f"Amount: {total_price} {currency}\n"
+            f"Payment Type: {payment_type}\n"
+            f"Payement Movement Id: {payment_movement_id}\n"
+            f"Generated Link: {generated_link}\n"
+            f"Date: {payment_date}\n"
+            f"Provider Payment Charge ID: {provider_payment_charge_id}\n"
+            f"Telegram Payment Charge ID: {telegram_payment_charge_id}\n"
+            f"Chat ID: {message.chat.id}\n"
+            f"Message ID: {message.message_id}"
+        )
+        await bot.send_message(ADMIN_ID, admin_message, parse_mode='HTML')
+
+        session = SessionLocal()
+        user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
+        if user:
+            user.step = 'START'
+            session.commit()
+        session.close()
+
     except Exception as e:
         error_message = (
             f"❌ Payment success handler error:\n"
             f"User ID: {message.from_user.id}\n"
+            f"Username: @{message.from_user.username or 'N/A'}\n"
             f"Payment Amount: {total_price if 'total_price' in locals() else 'N/A'}\n"
-            f"Error: {str(e)}\n"
+            f"Error Type: {type(e).__name__}\n"
+            f"Error Message: {str(e)}\n"
             f"Traceback:\n{traceback.format_exc()}"
         )
         await bot.send_message(ADMIN_ID, error_message)
@@ -299,13 +332,17 @@ async def fallback_handler(message: Message):
     try:
         telegram_id = message.from_user.id
         user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
-
         if user:
-            user.step = 'START'
-            session.commit()
-
-        await message.reply(text=get_translation('wrong_command'), parse_mode='HTML')
-        await message.answer(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys)
+            if user.step == 'START':
+                await message.answer(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys)
+            elif user.step == 'PREMIUM_WARNING_HANDLER':
+                await message.reply(get_translation('premium_warning'), reply_markup=sure_buttons, parse_mode='HTML')
+            elif user.step == "PAYMENT":
+                await message.reply(get_translation('payment_question'), reply_markup=payment_buttons, parse_mode='HTML') 
+            elif user.step == "PREMIUM_ALRIGHT_HANDLER":
+                await message.reply(get_translation('payment_question'), reply_markup=payment_buttons, parse_mode='HTML') 
+            else:
+                await message.reply(text=get_translation('wrong_command'), parse_mode='HTML')
     except Exception as e:
         error_message = (
             f"❌ Fallback handler error:\n"

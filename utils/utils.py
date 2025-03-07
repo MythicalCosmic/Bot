@@ -22,15 +22,22 @@ def add_user(telegram_id, username, step):
 
 def add_payement_movement(telegram_id, generated_link, total_price, payment_type):
     session = SessionLocal()
-    new_payment_movement = PaymentMovement(
-        telegram_id=telegram_id,
-        generated_link=generated_link,
-        total_price=total_price,
-        payment_type=payment_type
-    )
-    session.add(new_payment_movement)
-    session.commit()
-    return True
+    try:
+        payment_movement = PaymentMovement(
+            telegram_id=telegram_id,
+            generated_link=generated_link,
+            total_price=total_price,
+            payment_type=payment_type,
+        )
+        session.add(payment_movement)
+        session.commit()
+        session.refresh(payment_movement)  
+        return payment_movement.id  
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
 
 
 
