@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-PREMIUM_KEY = "🌟 Yopiq kanalda qatnashish"
-SMM_KEY = "📣 SMM xizmati"  
+PREMIUM_KEY = "🌟 Yopiq kanalga qo'shilish"
+SMM_KEY = "📣 Marketing xizmati"
 CONTACT = "📞💻 Dasturchi bilan bog‘lanish"  
 SURE_OK = "🚀 Kanalga qo'shilmoqchiman"
 SURE_NOT = "❌ Yo‘q, orqaga qaytish"  
@@ -8,12 +8,12 @@ BUY_NOW = "💰 Sotib olish"
 BACK = "🔙 Orqaga"  
 CLICK_BUTTON = "💳 Click"  
 PAYME = "💳 Payme"
-
+CONSULTATION_KEY = "💬 Konsultatsiyaga yozilish"
 
 main_keys = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text=PREMIUM_KEY), KeyboardButton(text=SMM_KEY)],
-        [KeyboardButton(text=CONTACT)]
+        [KeyboardButton(text=PREMIUM_KEY), KeyboardButton(text=CONSULTATION_KEY)],
+        [KeyboardButton(text=CONTACT), KeyboardButton(text=SMM_KEY)]
     ],
     resize_keyboard=True
 )
