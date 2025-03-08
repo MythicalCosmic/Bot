@@ -1,0 +1,57 @@
+uz:
+  start_message:
+    "Bu yerda siz quyidagilarni qilishingiz mumkin:\n\n✅ <b>Yopiq kanalga
+    qo'shilish</b> – bu shaxsiy brend, blog yuritish va monetizatsiya bo‘yicha bilimlar
+    bazasi. Hammasi aniq, bosqichma-bosqich va ortiqcha ma’lumotsiz!\n\n✅ <b>Konsultatsiyaga
+    yozilish</b> – Agar shaxsiy brendga, biznesingizga marketing tahlil yoki strategiya
+    kerak bo'lsa.\n\n✅ <b>Bot zakaz qilish</b> - Agar biznesingizga turli xil botlarni
+    yaratishni hohlasangiz.\n\nShunchaki menyudan kerakli bo‘limni tanlang va harakatni
+    boshlang! \U0001F525"
+  it_service_message:
+    "\U0001F4F1 <b>Professional IT-Service</b>  \n\n\U0001F539 <b>Bizning
+    xizmatlar:</b>  \n\n▫️ <b>Veb-saytlar ishlab chiqish</b>  \n• Zamonaviy va moslashuvchan
+    dizayn  \n• Xavfsizlik kafolati  \n• Frontend va Backend \n\n▫️ <b>Telegram botlar
+    yaratish</b>  \n• Biznes jarayonlarini avtomatlashtirish  \n• To'lov tizimlari
+    integratsiyasi  \n• Murakkab CRM va ERP tizimlar bilan integratsiya  \n• Yuqori
+    yuklanishlarga bardoshli arxitektura  \n\n▫️ <b>Avtomatlashtirish tizimlari</b>
+    \ \n• Biznes jarayonlarini tahlil qilish va optimizatsiya  \n• Ma'lumotlar bazasini
+    boshqarish tizimlari \n• Xavfsizlik va monitoring tizimlari  \n\n✅ <b>Nega aynan
+    biz?</b>  \n• 7+ yillik tajriba  \n• 10+ dan ortiq muvaffaqiyatli loyihalar va
+    100+ dan ortiq telegram botlar  \n• Zamonaviy texnologiyalar  \n• Aniq muddatlar
+    va sifat kafolati  \n• Loyiha davomida doimiy aloqa  \n• Texnik qo'llab-quvvatlash
+    \ \n\n\U0001F91D <b>Har bir loyiha uchun individual yondashuv va moslashuvchan
+    narxlar.</b>  \n\n\U0001F4CA <b>Loyihangiz uchun bepul konsultatsiya va narxlarni
+    muhokama qilish:</b>  \n➡️ @JasonDevOps  \n\n<i>\U0001F4A1 Zamonaviy texnologiyalar
+    orqali biznesingizni yangi bosqichga olib chiqamiz!</i> "
+  warning_message:
+    "\U0001F525Bu yerda siz shaxsiy brend, monetizatsiya va blogging
+    bo‘yicha bilimlar bazasiga ega yopiq kanalga kirishni olasiz.\n\n<b>Bu kanalda
+    sizni quyidagilar kutmoqda:\n</b>\n- marketing sistemalari\n- marketing jadvallari\n-
+    blogni yuritishda sizga shpargalka bo'ladigan bilimlar\n- marketing strategiyasini
+    to'g'ri tuzish bo'yicha maslahatlar\n- tayyor marketing shablonlari\n\n<i>Kanal
+    doimiy ravishda yangiliklar bilan to'ldirib turiladi!\n</i>\n\n<blockquote>\U0001F680
+    Mening asosiy g‘oyam: blogni yoki biznesni rivojlantirishda, to'g'ri marketing
+    sistema yaratishni o'rganib natijalarga erishishni osonlashtirish!</blockquote>\n\n<tg-spoiler><b>\U0001F4B3
+    Kanalga kirish pullik bo'lib, to'lovni Click yoki Payme orqali, Telegramdan chiqmasdan
+    amalga oshirishingiz mumkin. To'lov tizimi maksimal darajada qulay va xavfsiz
+    qilingan!</b></tg-spoiler>"
+  smm_message:
+    "\U0001F4E2\U0001F4CA <b>SMM Xizmatlarimizga Xush Kelibsiz!</b> \U0001F680\n\n\U0001F680
+    Onlayn ishtirokingizni bizning <b>Social Media Marketing (SMM)</b> xizmatlarimiz
+    bilan kuchaytiring.\n\U0001F525 <b>Foydalanuvchilar bilan faollikni oshirish</b>\n\U0001F4C8
+    <b>Obunachilar sonini ko‘paytirish</b>\n\U0001F4B8 <b>Ko‘proq savdo qilish</b>\n\n\U0001F3AF
+    <i>Bizning maxsus paketlarimizdan birini tanlab, o‘sishni boshlang!</i>"
+  payment_type_message: "\U0001F4B0 <b>To‘lov usulini tanlang</b>: \U0001F4B0\n"
+  wrong_command_message:
+    "❌\U0001F916 <b>Oops!</b> Noto‘g‘ri buyruq kiritildi.\n\U0001F504
+    Iltimos, qaytadan urinib ko‘ring yoki yordam uchun /start ni bosing."
+  success_message:
+    "\U0001F389 <b>Tabriklaymiz! To'lovingiz muvaffaqiyatli amalga oshirildi!</b>\n\n❤️
+    Hurmatli mijozimiz, bizga ishonch bildirganingiz uchun chin dildan minnatdormiz!\n\n\U0001F381
+    Sizga maxsus sovg'amiz bor! Quyidagi maxsus tayyorlangan havola orqali bizning
+    yopiq kanalimizga a'zo bo'lishingiz mumkin:\n\n\U0001F517 :link\n\n\U0001F4DD<b>
+    Muhim ma'lumot:</b>\n• ⚠️ <i>Diqqat! Agar Telegram accountingizni \"Delete account\"
+    qilsangiz, havola qayta tiklanmaydi\n• Havola orqali faqat bir marta a'zo bo'lish
+    mumkin\n• Boshqalarga berish mumkin emas, chunki havola bir marta ishlatilgandan
+    so'ng o'chadi\n\n</i>✨ Kanalimizda siz uchun eng sara va foydali ma'lumotlar kutmoqda!\n\n\U0001F91D
+    Ishonchingiz uchun rahmat, hamkorligimiz uzoq davom etishiga umid qilamiz!"

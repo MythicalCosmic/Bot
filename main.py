@@ -20,6 +20,7 @@ if WEBHOOK_MODE:
 
 else:
     async def main():
+        print('Bot started successfully')
         await dp.start_polling(bot)
        
     if __name__ == "__main__":

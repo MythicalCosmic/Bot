@@ -1,53 +1,14 @@
-from datetime import datetime
 from aiogram import Router, types, Bot
-from aiogram.types import Message, CallbackQuery, LabeledPrice, PreCheckoutQuery
+from aiogram.types import Message, LabeledPrice, PreCheckoutQuery
 from aiogram.filters import Command
 from config.settings import get_translation
 from database.database import *
 from utils.utils import *
 from keyboards.keyboards import *
-from dotenv import load_dotenv
 from config.bot_setup import bot
-
-load_dotenv(override=True)
-
-CLICK_TOKEN = os.getenv("CLICK_TOKEN", "0")
-PAYME_TOKEN = os.getenv("PAYME_TOKEN", "0")
-CHANNEL_ID = os.getenv("VIDEO_CHANNEL_ID", "0")
-VIDEO_MESSAGE_ID = os.getenv("VIDEO_MESSAGE_ID", "0")
-ADMIN_ID = os.getenv("ADMIN_ID", "0")
-LINK_CHANNEL_ID = os.getenv('LINK_CHANNEL_ID')
 
 router = Router()
 
-VALID_STATES = {
-    'START',
-    'PREMIUM_WARNING_HANDLER',
-    'PAYMENT',
-    'PREMIUM_ALRIGHT_HANDLER'
-}
-
-def check_user_and_state(session, telegram_id, expected_state=None):
-    user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
-    if not user:
-        return None
-    if expected_state and user.step not in VALID_STATES:
-        user.step = 'START'
-        session.commit()
-    if expected_state and user.step != expected_state:
-        return None
-    return user
-
-async def send_state_message(message: Message, user):
-    state_handlers = {
-        'START': lambda: message.reply(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys),
-        'PREMIUM_WARNING_HANDLER': lambda: message.reply(get_translation('premium_warning'), reply_markup=sure_buttons, parse_mode='HTML'),
-        'PAYMENT': lambda: message.reply(get_translation('payment_question'), reply_markup=payment_buttons, parse_mode='HTML'),
-        'PREMIUM_ALRIGHT_HANDLER': lambda: message.reply(get_translation('payment_question'), reply_markup=payment_buttons, parse_mode='HTML')
-    }
-    handler = state_handlers.get(user.step)
-    if handler:
-        await handler()
 
 @router.message(Command("start"))
 async def say_hi(message: types.Message):
@@ -57,7 +18,7 @@ async def say_hi(message: types.Message):
     try:
         user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
         if not user:
-            add_user(telegram_id, username, step="START")
+            add_user(telegram_id, username, step="START", language="uz")
         else:
             user.step = "START"
             session.commit()
@@ -76,14 +37,14 @@ async def handle_premium(message: Message):
         if not user:
             user = check_user_and_state(session, message.from_user.id)
             if not user:  
-                await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+                await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
             return
 
         user.step = 'PREMIUM_WARNING_HANDLER'
         session.commit()
-        await message.reply(get_translation('premium_warning'), reply_markup=sure_buttons, parse_mode='HTML')
+        await message.reply(get_translation('warning_message'), reply_markup=sure_buttons, parse_mode='HTML')
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("premium handler", message, e))
     finally:
@@ -97,14 +58,14 @@ async def handle_payment(message: Message):
         if not user:
             user = check_user_and_state(session, message.from_user.id)
             if not user: 
-                await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+                await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
             return
 
         user.step = 'PAYMENT'
         session.commit()
-        await message.reply(get_translation('payment_question'), reply_markup=payment_buttons, parse_mode='HTML')
+        await message.reply(get_translation('payment_type_message'), reply_markup=payment_buttons, parse_mode='HTML')
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("payment handler", message, e))
     finally:
@@ -118,7 +79,7 @@ async def handle_alright(message: Message):
         if not user:
             user = check_user_and_state(session, message.from_user.id)
             if not user:  
-                await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+                await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
 
         payment_type = message.text.strip().lower()
@@ -161,7 +122,7 @@ async def successful_payment_handler(message: Message):
         if not user:
             user = check_user_and_state(session, message.from_user.id)
             if not user: 
-                await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+                await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
             return
@@ -180,10 +141,10 @@ async def successful_payment_handler(message: Message):
         user.step = 'START'
         session.commit()
 
-        await message.reply(get_translation('thanks').replace(':link',generated_link), parse_mode='HTML', reply_markup=main_keys)
+        await message.reply(get_translation('success_message').replace(':link',generated_link), parse_mode='HTML', reply_markup=main_keys)
         await message.answer(generated_link)
         
-        await bot.send_message(ADMIN_ID, _format_payment_success(message, total_price, payment_type, generated_link, payment_movement_id))
+        await bot.send_message(ADMIN_ID, format_payment_success(message, total_price, payment_type, generated_link, payment_movement_id))
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("payment success", message, e))
     finally:
@@ -197,12 +158,12 @@ async def handle_smm(message: Message):
         if not user:
             user = check_user_and_state(session, message.from_user.id)
             if not user:  
-                await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+                await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
             return
 
-        await message.reply(get_translation('smm_intro'), parse_mode='HTML', reply_markup=smm_button)
+        await message.reply(get_translation('smm_message'), parse_mode='HTML', reply_markup=smm_button)
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("SMM handler", message, e))
     finally:
@@ -216,34 +177,14 @@ async def handle_contact(message: Message):
         if not user:
             user = check_user_and_state(session, message.from_user.id)
             if not user:  
-                await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+                await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
             return
 
-        await message.reply(get_translation('contact_message'), parse_mode='HTML')
+        await message.reply(get_translation('it_service_message'), parse_mode='HTML')
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("contact handler", message, e))
-    finally:
-        session.close()
-
-@router.callback_query(lambda c: c.data == "go_back")
-async def handle_back_inline(callback_query: CallbackQuery):
-    session = SessionLocal()
-    try:
-        user = check_user_and_state(session, callback_query.from_user.id)
-        if not user:  
-            await callback_query.message.reply(get_translation('wrong_command'), parse_mode='HTML')
-            await callback_query.answer()
-            return
-
-        user.step = 'START'
-        session.commit()
-        
-        await callback_query.message.reply(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys)
-        await callback_query.answer()
-    except Exception as e:
-        await bot.send_message(ADMIN_ID, format_error("back inline", None, e, callback_query.from_user.id))
     finally:
         session.close()
 
@@ -253,16 +194,22 @@ async def handle_back(message: Message):
     try:
         user = check_user_and_state(session, message.from_user.id)
         if not user:  
-            await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+            await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
             return
 
-        user.step = 'START'
+        if message.text == BACK:
+            user.step = 'PREMIUM_WARNING_HANDLER'
+            await message.reply(get_translation('warning_message'), parse_mode='HTML', reply_markup=sure_buttons)
+        else:  
+            user.step = 'START'
+            await message.reply(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys)
+
         session.commit()
-        await message.reply(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys)
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("back handler", message, e))
     finally:
         session.close()
+
 
 @router.message()
 async def fallback_handler(message: Message):
@@ -270,11 +217,11 @@ async def fallback_handler(message: Message):
     try:
         user = check_user_and_state(session, message.from_user.id)
         if not user: 
-            await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+            await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
             return
 
         if user.step is None:
-            await message.reply(get_translation('wrong_command'), parse_mode='HTML')
+            await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
             return
 
         await send_state_message(message, user)
@@ -283,28 +230,3 @@ async def fallback_handler(message: Message):
     finally:
         session.close()
 
-def _format_payment_success(message, total_price, payment_type, generated_link, payment_movement_id):
-    return (
-        f"✅ Successful Payment Received!\n\n"
-        f"User ID: {message.from_user.id}\n"
-        f"Username: @{message.from_user.username or ''}\n"
-        f"Full Name: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
-        f"Amount: {total_price} {message.successful_payment.currency}\n"
-        f"Payment Type: {payment_type}\n"
-        f"Payment Movement Id: {payment_movement_id}\n"
-        f"Generated Link: {generated_link}\n"
-        f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-    )
-
-# @router.channel_post()
-# async def get_video_id(message: types.Message):
-#     try:
-#         print(f"Video message ID: {message.message_id}")
-#     except Exception as e:
-#         error_message = (
-#             f"❌ Channel post handler error:\n"
-#             f"Message ID: {message.message_id}\n"
-#             f"Error: {str(e)}\n"
-#             f"Traceback:\n{traceback.format_exc()}"
-#         )
-#         await bot.send_message(ADMIN_ID, error_message)

@@ -1,10 +1,31 @@
 from database.database import TelegramUser, SessionLocal, PaymentMovement
-from aiogram.types import ChatInviteLink
-from datetime import datetime, timedelta
-from aiogram.types import ChatInviteLink
+from aiogram.types import ChatInviteLink, Message
+from datetime import datetime
+from config.settings import get_translation
 import traceback
+from keyboards.keyboards import *
+from dotenv import load_dotenv
+import os
 
-def add_user(telegram_id, username, step):
+load_dotenv(override=True)
+
+
+CLICK_TOKEN = os.getenv("CLICK_TOKEN", "0")
+PAYME_TOKEN = os.getenv("PAYME_TOKEN", "0")
+CHANNEL_ID = os.getenv("VIDEO_CHANNEL_ID", "0")
+VIDEO_MESSAGE_ID = os.getenv("VIDEO_MESSAGE_ID", "0")
+ADMIN_ID = os.getenv("ADMIN_ID", "0")
+LINK_CHANNEL_ID = os.getenv('LINK_CHANNEL_ID')
+
+
+VALID_STATES = {
+    'START',
+    'PREMIUM_WARNING_HANDLER',
+    'PAYMENT',
+    'PREMIUM_ALRIGHT_HANDLER'
+}
+
+def add_user(telegram_id, username, step, language):
     
     session = SessionLocal()
     existing_user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
@@ -13,7 +34,8 @@ def add_user(telegram_id, username, step):
         new_user = TelegramUser(
             telegram_id=telegram_id,
             username=username,
-            step=step
+            step=step,
+            language=language
         )
         session.add(new_user)
         session.commit()
@@ -70,3 +92,42 @@ def format_error(context, message, error, user_id=None):
         f"Error Message: {str(error)}\n"
         f"Traceback:\n{traceback.format_exc()}"
     )
+
+
+def format_payment_success(message, total_price, payment_type, generated_link, payment_movement_id):
+    formatted_price = f"{total_price:,.2f}"
+    return (
+        f"✅ Successful Payment Received!\n\n"
+        f"User ID: {message.from_user.id}\n"
+        f"Username: @{message.from_user.username or ''}\n"
+        f"Full Name: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
+        f"Amount: {formatted_price} {message.successful_payment.currency}\n"
+        f"Payment Type: {payment_type}\n"
+        f"Payment Movement Id: {payment_movement_id}\n"
+        f"Generated Link: {generated_link}\n"
+        f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    )
+
+
+
+def check_user_and_state(session, telegram_id, expected_state=None):
+    user = session.query(TelegramUser).filter_by(telegram_id=telegram_id).first()
+    if not user:
+        return None
+    if expected_state and user.step not in VALID_STATES:
+        user.step = 'START'
+        session.commit()
+    if expected_state and user.step != expected_state:
+        return None
+    return user
+
+async def send_state_message(message: Message, user):
+    state_handlers = {
+        'START': lambda: message.reply(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys),
+        'PREMIUM_WARNING_HANDLER': lambda: message.reply(get_translation('warning_message'), reply_markup=sure_buttons, parse_mode='HTML'),
+        'PAYMENT': lambda: message.reply(get_translation('payment_type_message'), reply_markup=payment_buttons, parse_mode='HTML'),
+        'PREMIUM_ALRIGHT_HANDLER': lambda: message.reply(get_translation('payment_type_message'), reply_markup=payment_buttons, parse_mode='HTML')
+    }
+    handler = state_handlers.get(user.step)
+    if handler:
+        await handler()

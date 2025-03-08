@@ -1,4 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+
+
 PREMIUM_KEY = "🌟 Yopiq kanalga qo'shilish"
 SMM_KEY = "📣 Marketing xizmati"
 CONTACT = "📞💻 Dasturchi bilan bog‘lanish"  

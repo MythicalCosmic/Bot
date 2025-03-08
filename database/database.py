@@ -20,6 +20,7 @@ class TelegramUser(Base):
     telegram_id = Column(Integer, unique=True, index=True)
     username = Column(String(255), nullable=True)
     step = Column(String(250))
+    language = Column(String, default='uz')
     created_at = Column(DateTime, default=func.now())  
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now()) 
 
