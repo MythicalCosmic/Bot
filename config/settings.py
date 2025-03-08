@@ -32,7 +32,7 @@ LOG_FILE = os.path.join(LOGS_DIR, "request.log")
 
 logging.basicConfig(
     filename=LOG_FILE,
-    level=logging.WARNING,
+    level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8"
 )
