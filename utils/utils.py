@@ -6,6 +6,7 @@ import traceback
 from keyboards.keyboards import *
 from dotenv import load_dotenv
 import os
+import pytz
 
 load_dotenv(override=True)
 
@@ -16,6 +17,10 @@ CHANNEL_ID = os.getenv("VIDEO_CHANNEL_ID", "0")
 VIDEO_MESSAGE_ID = os.getenv("VIDEO_MESSAGE_ID", "0")
 ADMIN_ID = os.getenv("ADMIN_ID", "0")
 LINK_CHANNEL_ID = os.getenv('LINK_CHANNEL_ID')
+TIMEZONE = os.getenv('TIMEZONE')
+
+uzb_timezone = pytz.timezone(TIMEZONE)
+
 
 
 VALID_STATES = {
@@ -95,6 +100,7 @@ def format_error(context, message, error, user_id=None):
 
 
 def format_payment_success(message, total_price, payment_type, generated_link, payment_movement_id):
+    current_time = datetime.now(uzb_timezone).strftime('%Y-%m-%d %H:%M:%S')
     formatted_price = f"{total_price:,.2f}"
     return (
         f"✅ Successful Payment Received!\n\n"
@@ -105,7 +111,7 @@ def format_payment_success(message, total_price, payment_type, generated_link, p
         f"Payment Type: {payment_type}\n"
         f"Payment Movement Id: {payment_movement_id}\n"
         f"Generated Link: {generated_link}\n"
-        f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"Date: {current_time}\n" 
     )
 
 
