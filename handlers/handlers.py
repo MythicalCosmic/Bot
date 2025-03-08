@@ -180,7 +180,7 @@ async def successful_payment_handler(message: Message):
         user.step = 'START'
         session.commit()
 
-        await message.reply(get_translation('thanks'), parse_mode='HTML', reply_markup=back_button)
+        await message.reply(get_translation('thanks').replace(':link',generated_link), parse_mode='HTML', reply_markup=main_keys)
         await message.answer(generated_link)
         
         await bot.send_message(ADMIN_ID, _format_payment_success(message, total_price, payment_type, generated_link, payment_movement_id))
@@ -287,18 +287,13 @@ def _format_payment_success(message, total_price, payment_type, generated_link, 
     return (
         f"✅ Successful Payment Received!\n\n"
         f"User ID: {message.from_user.id}\n"
-        f"Username: @{message.from_user.username or 'N/A'}\n"
-        f"First Name: {message.from_user.first_name or 'No first name'}\n"
-        f"Last Name: {message.from_user.last_name or 'No last name'}\n"
+        f"Username: @{message.from_user.username or ''}\n"
+        f"Full Name: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
         f"Amount: {total_price} {message.successful_payment.currency}\n"
         f"Payment Type: {payment_type}\n"
         f"Payment Movement Id: {payment_movement_id}\n"
         f"Generated Link: {generated_link}\n"
         f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-        f"Provider Payment Charge ID: {message.successful_payment.provider_payment_charge_id}\n"
-        f"Telegram Payment Charge ID: {message.successful_payment.telegram_payment_charge_id}\n"
-        f"Chat ID: {message.chat.id}\n"
-        f"Message ID: {message.message_id}"
     )
 
 # @router.channel_post()

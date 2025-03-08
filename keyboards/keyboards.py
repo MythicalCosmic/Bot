@@ -52,6 +52,6 @@ back_button = ReplyKeyboardMarkup(
 
 smm_button = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text=CLICK_BUTTON, url="https://telegram.org/JasonDevOps")],
+        [InlineKeyboardButton(text="💬 Mutaxasisga yozish", url="https://telegram.org/JasonDevOps")],
     ]
 )
