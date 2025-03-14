@@ -169,6 +169,26 @@ async def handle_smm(message: Message):
     finally:
         session.close()
 
+
+@router.message(lambda message: message.text == CONSULTATION_KEY)
+async def handle_consulting(message: Message):
+    session = SessionLocal()
+    try:
+        user = check_user_and_state(session, message.from_user.id, 'START')
+        if not user:
+            user = check_user_and_state(session, message.from_user.id)
+            if not user:  
+                await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
+                return
+            await send_state_message(message, user)
+            return
+
+        await message.reply(get_translation('consultation_message'), parse_mode='HTML', reply_markup=main_keys)
+    except Exception as e:
+        await bot.send_message(ADMIN_ID, format_error("SMM handler", message, e))
+    finally:
+        session.close()
+
 @router.message(lambda message: message.text == CONTACT)
 async def handle_contact(message: Message):
     session = SessionLocal()
