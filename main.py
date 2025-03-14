@@ -11,7 +11,7 @@ from aiogram.types import Update
 if WEBHOOK_MODE:
     app = FastAPI()
 
-    @app.post('/Marketing_by_Malika_bot')
+    @app.post('/')
     async def webhook(request: Request):
         data = await request.json()
         update = Update(**data)
