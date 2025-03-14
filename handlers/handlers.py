@@ -91,7 +91,7 @@ async def handle_alright(message: Message):
         user.step = 'PREMIUM_ALRIGHT_HANDLER'
         session.commit()
 
-        prices = [LabeledPrice(label="Telegram Premium Subscription", amount=500000)]
+        prices = [LabeledPrice(label="Telegram Premium Subscription", amount=100000)]
         await message.reply_invoice(
             title=f"Premium channel {payment_type.removeprefix('💳 ').upper()}",
             description="Premium kanalga kirish orqali marketingda maksimal imkoniyatlardan foydalaning.",
