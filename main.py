@@ -1,7 +1,7 @@
 import asyncio
 import uvicorn
 from fastapi import FastAPI, Request
-from config.settings import  PORT, WEBHOOK_MODE
+from config.settings import PORT, WEBHOOK_MODE, logger
 from config.bot_setup import bot, dp
 from aiogram.types import Update
 
@@ -19,8 +19,8 @@ if WEBHOOK_MODE:
 
 
     if __name__ == "__main__":
-        print('Bot started successfully webhook')
-        print(PORT,WEBHOOK_MODE)
+        logger.info('Bot started successfully webhook')
+        logger.info(PORT,WEBHOOK_MODE)
         uvicorn.run(app, host="0.0.0.0", port=PORT)
 
 else:
