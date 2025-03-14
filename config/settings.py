@@ -10,8 +10,7 @@ if not TOKEN:
     raise ValueError("Token not found")
 
 WEBHOOK_MODE = os.getenv("WEBHOOK", "false").strip().lower() == "true"
-WEBHOOK_URL = os.getenv("WEBHOOK_URL", "").strip()
-PORT = int(os.getenv("PORT", 8000))
+PORT = 80
 
 BOT_LANGUAGE = os.getenv("BOT_LANGUAGE", "en").strip().lower()
 
