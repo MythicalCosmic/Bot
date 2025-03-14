@@ -3,21 +3,21 @@ uz:
     "Assalomu aleykum barchaga! 😊 Bu yerda siz marketing bilan bog'liq bo'lgan barcha savollaringizga javob olishingiz mumkin!
 
 
-    Menyudagi tugmachalarni bosib, quyidagi ma'lumotlarni olishingiz mumkin:
+    Menyudagi tugmalar orqali quyidagi ma'lumotlarni olishingiz mumkin:
 
 
     ✅ <b>Yopiq kanalga
-    qo'shilish</b> – bu kanalda men marketingdagi 8 yillik tajribam asosida yeg'gan amaliy bilimlarimni jamlaganman. Sizga faqat ularni olib, proektingiozga qo'llab natijalarga erishish qoladi!  Hammasi aniq va sodda, bosqichma-bosqich tushuntirilgan.
+    qo'shilish</b> – bu kanalda men marketingdagi 8 yillik tajribam asosida yig'gan amaliy bilimlarimni jamlaganman. Sizga faqat ularni olib, proektingizga qo'llab natijalarga erishish qoladi!  Hammasi aniq va sodda, bosqichma-bosqich tushuntirilgan.
 
 
     ✅ <b>Konsultatsiyaga
-    yozilish</b> – Bizneslaringizda marketing to'g'ri ishlayaptimi, ijtimoiy tgarmoqlarda to'g'ri strategiya qo'yilganmi, sotuv voronkalari to'g'ri sozlanganmi - bularning barchasi va boshqa savollarga maslahat olish uchun.
+    yozilish</b> – Bizneslaringizda marketing to'g'ri ishlayaptimi, ijtimoiy tarmoqlarda to'g'ri strategiya qo'yilganmi, sotuv voronkalari to'g'ri sozlanganmi - bularning barchasi va boshqa savollarga maslahat olish uchun.
 
 
     ✅ <b>Dasturchi bilan bog'lanish</b> - Biznesingizga turli xil dasturchi xizmatlarini qidirayotgan bo'lsangiz.
 
 
-    ✅ <b>Marketing xizmat</b> - Biznesingizni nomlanishidan boshlab, to'liq marketing strategiyasi va uni auditi bo'yicha bizning marketing xizmatlarimizdan foydalinishingiz mumkmin.
+    ✅ <b>Marketing xizmati</b> - Biznesingizni nomlanishidan boshlab, to'liq marketing strategiyasi va uni auditi bo'yicha bizning marketing xizmatlarimizdan foydalinishingiz mumkmin.
 
 
     Birgalikda natijalarga erishishga tayyormisiz?
@@ -123,21 +123,71 @@ uz:
 
 
     <tg-spoiler><b>💳 Kanalga kirish pullik bo'lib, to'lovni Click yoki Payme orqali, Telegramdan chiqmasdan amalga oshirishingiz mumkin. To'lov tizimi maksimal darajada qulay va xavfsiz qilingan!
-    Kanalga obuna bo'lish narxi: <s>500 000 so'm</s>  50 000 so'm</b></tg-spoiler>"
-  smm_message: <b>📢📊 SMM Xizmatlarimizga Xush Kelibsiz! 🚀</b>
+    Kanalga obuna bo'lish 
+    
+    
+💸 Narxi: <s>500 000 so'm</s>  50 000 so'm</b></tg-spoiler>"
+  smm_message: "<b>📈 Marketing Xizmatlarimizga Xush Kelibsiz! 🚀
+  
+
+<i>Biznesingiz uchun kompleks marketing yechimlarini taqdim etamiz:</i>
 
 
-    <b>🚀 Onlayn ishtirokingizni bizning Social Media Marketing (SMM) xizmatlarimiz bilan kuchaytiring.</b>
+🎯 Brending va Pozitsiyalash</b>
 
-    <b> 🔥 Foydalanuvchilar bilan faollikni oshirish</b>
+• Kompaniya nomini ishlab chiqish
 
-    <b>📈 Obunachilar sonini ko‘paytirish</b>
+• Brendbuk yaratish
 
-    <b>💸 Ko‘proq savdo qilish</b>
+• Pozitsiyalash strategiyasi
 
 
-    <i>Bizning maxsus paketlarimizdan birini tanlab, o‘sishni boshlang!</i>
-  payment_type_message: "\U0001F4B0 <b>To‘lov usulini tanlang</b>: \U0001F4B0\n"
+<b>📊 Marketing Strategiya</b>
+
+• Bozor tahlili va segmentatsiya
+
+• Raqobatchilar tahlili
+
+• Maqsadli auditoriyani aniqlash
+
+• Narxlash strategiyasi
+
+
+<b>💡 Raqamli Marketing</b>
+
+• SMM menejmenti
+
+• Targeting reklamalar
+
+• SEO optimizatsiya
+
+• Kontent marketing
+
+
+<b>📱 360° Marketing</b>
+
+• Oflayn reklama kampaniyalari
+
+• PR strategiya
+
+• Tadbirlar marketing
+
+• Sales-marketing integratsiyasi
+
+
+<b>📊 Marketing Audit</b>
+
+• Marketing faoliyati tahlili
+
+• ROI hisob-kitobi
+
+• Samaradorlik ko'rsatkichlari
+
+• Rivojlanish tavsiyalari
+
+
+<b><i>💪 Professional marketing komandamiz sizning biznesingizni yangi bosqichga olib chiqishga tayyor!</i></b>"
+  payment_type_message: "\U0001F4B0 <b>To‘lov usulini tanlang</b>:\n"
   wrong_command_message:
     "❌\U0001F916 <b>Oops!</b> Noto‘g‘ri buyruq kiritildi.\n\U0001F504
     Iltimos, qaytadan urinib ko‘ring yoki yordam uchun /start ni bosing."
@@ -145,7 +195,7 @@ uz:
     "\U0001F389 <b>🎉 Tabriklaymiz! To'lovingiz muvaffaqiyatli amalga oshirildi!</b>
 
 
-    ❤️ Hurmatli mijozimiz, bizga ishonch bildirganingiz uchun chin dildan minnatdormiz!
+    ❤️ Hurmatli mijoz, bizga ishonch bildirganingiz uchun chin dildan minnatdormiz!
 
 
     🎁 Sizga maxsus sovg'amiz bor! Quyidagi maxsus tayyorlangan havola orqali bizning yopiq kanalimizga a'zo bo'lishingiz mumkin:

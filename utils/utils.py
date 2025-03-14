@@ -103,15 +103,15 @@ def format_payment_success(message, total_price, payment_type, generated_link, p
     current_time = datetime.now(uzb_timezone).strftime('%Y-%m-%d %H:%M:%S')
     formatted_price = f"{total_price:,.2f}"
     return (
-        f"✅ Successful Payment Received!\n\n"
+        f"✅ Muvaffaqiyatli to'lov qabul qilindi!\n\n"
         f"User ID: {message.from_user.id}\n"
         f"Username: @{message.from_user.username or ''}\n"
-        f"Full Name: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
-        f"Amount: {formatted_price} {message.successful_payment.currency}\n"
-        f"Payment Type: {payment_type}\n"
-        f"Payment Movement Id: {payment_movement_id}\n"
-        f"Generated Link: {generated_link}\n"
-        f"Date: {current_time}\n" 
+        f"FIO: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
+        f"Summa: {formatted_price} {message.successful_payment.currency}\n"
+        f"To'lov usuli: {payment_type}\n"
+        f"To'lov ID: {payment_movement_id}\n"
+        f"Link: {generated_link}\n"
+        f"Sana: {current_time}\n"
     )
 
 

@@ -93,8 +93,8 @@ async def handle_alright(message: Message):
 
         prices = [LabeledPrice(label="Telegram Premium Subscription", amount=1000000)]
         await message.reply_invoice(
-            title=f"Telegram Premium {payment_type.removeprefix('💳 ').upper()}",
-            description="Telegram premium bilan koplab narsalari oching!.",
+            title=f"Premium channel {payment_type.removeprefix('💳 ').upper()}",
+            description="Premium kanalga kirish orqali marketingda maksimal imkoniyatlardan foydalaning.",
             payload=f"{payment_type.removeprefix('💳 ').upper()}",
             provider_token=payment_tokens.get(payment_type, CLICK_TOKEN),
             currency="UZS",
@@ -183,7 +183,7 @@ async def handle_consulting(message: Message):
             await send_state_message(message, user)
             return
 
-        await message.reply(get_translation('consultation_message'), parse_mode='HTML', reply_markup=main_keys)
+        await message.reply(get_translation('consultation_message'), parse_mode='HTML', reply_markup=consultation_button)
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("SMM handler", message, e))
     finally:
