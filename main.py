@@ -16,11 +16,11 @@ if WEBHOOK_MODE:
 
     app = FastAPI(lifespan=lifespan)
 
-    @app.post('/webook')
+    @app.post('/webhook')
     async def webhook(request: Request):
         data = await request.json()
         update = Update(**data)
-        dp.feed_update(update)
+        await dp.feed_update(bot, update)
         return {"status": "ok"}
 
 
