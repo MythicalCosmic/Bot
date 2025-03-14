@@ -1,9 +1,8 @@
 import asyncio
 import uvicorn
 from fastapi import FastAPI, Request
-from config.settings import WEBHOOK_URL, PORT, WEBHOOK_MODE
+from config.settings import  PORT, WEBHOOK_MODE
 from config.bot_setup import bot, dp
-from contextlib import asynccontextmanager
 from aiogram.types import Update
 
 
