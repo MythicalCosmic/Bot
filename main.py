@@ -9,12 +9,7 @@ from aiogram.types import Update
 
 
 if WEBHOOK_MODE:
-    @asynccontextmanager
-    async def lifespan(app: FastAPI):
-        await bot.set_webhook(WEBHOOK_URL)
-        yield
-
-    app = FastAPI(lifespan=lifespan)
+    app = FastAPI()
 
     @app.post('/webhook')
     async def webhook(request: Request):
