@@ -19,6 +19,8 @@ if WEBHOOK_MODE:
 
 
     if __name__ == "__main__":
+        print('Bot started successfully webhook')
+        print(PORT,WEBHOOK_MODE)
         uvicorn.run(app, host="0.0.0.0", port=PORT)
 
 else:
