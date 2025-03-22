@@ -15,7 +15,9 @@ CLICK_TOKEN = os.getenv("CLICK_TOKEN", "0")
 PAYME_TOKEN = os.getenv("PAYME_TOKEN", "0")
 CHANNEL_ID = os.getenv("VIDEO_CHANNEL_ID", "0")
 VIDEO_MESSAGE_ID = os.getenv("VIDEO_MESSAGE_ID", "0")
+PDF_MESSAGE_ID = os.getenv("PDF_MESSAGE_ID", "0")
 ADMIN_ID = os.getenv("ADMIN_ID", "0")
+PAYMENTS_GROUP_ID = os.getenv("PAYMENTS_GROUP_ID", "0")
 LINK_CHANNEL_ID = os.getenv('LINK_CHANNEL_ID')
 TIMEZONE = os.getenv('TIMEZONE')
 
@@ -104,12 +106,13 @@ def format_payment_success(message, total_price, payment_type, generated_link, p
     formatted_price = f"{total_price:,.2f}"
     return (
         f"✅ Muvaffaqiyatli to'lov qabul qilindi!\n\n"
+        
+        f"To'lov ID: #{payment_movement_id}\n"
         f"User ID: {message.from_user.id}\n"
         f"Username: @{message.from_user.username or ''}\n"
         f"FIO: {message.from_user.first_name} {message.from_user.last_name or ''}\n"
         f"Summa: {formatted_price} {message.successful_payment.currency}\n"
-        f"To'lov usuli: {payment_type}\n"
-        f"To'lov ID: {payment_movement_id}\n"
+        f"To'lov usuli: #{payment_type}\n"
         f"Link: {generated_link}\n"
         f"Sana: {current_time}\n"
     )

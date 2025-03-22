@@ -1,5 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, Gifts
 
 PREMIUM_KEY = "🌟 Yopiq kanalga qo'shilish"
 SMM_KEY = "📣 Marketing xizmati"
@@ -11,9 +10,11 @@ BACK = "🔙 Orqaga"
 CLICK_BUTTON = "💳 Click"  
 PAYME = "💳 Payme"
 CONSULTATION_KEY = "💬 Konsultatsiyaga yozilish"
+GIFT_KEY="🎁 Bepul Bilimlar"
 
 main_keys = ReplyKeyboardMarkup(
     keyboard=[
+        [KeyboardButton(text=GIFT_KEY)],
         [KeyboardButton(text=PREMIUM_KEY), KeyboardButton(text=CONSULTATION_KEY)],
         [KeyboardButton(text=CONTACT), KeyboardButton(text=SMM_KEY)]
     ],
@@ -54,12 +55,12 @@ back_button = ReplyKeyboardMarkup(
 
 smm_button = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="💬 Mutaxasisga yozish", url="https://telegram.org/anarkulova_malika")],
+        [InlineKeyboardButton(text="💬 Mutaxasisga yozish", url="https://telegram.org/getresult_uz")],
     ]
 )
 
 consultation_button = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="💬 Konsultatsiyaga yozilish", url="https://telegram.org/anarkulova_malika")],
+        [InlineKeyboardButton(text="💬 Konsultatsiyaga yozilish", url="https://telegram.org/getresult_uz")],
     ]
 )

@@ -1,8 +1,6 @@
 from aiogram import Router, types, Bot
-from aiogram.types import Message, LabeledPrice, PreCheckoutQuery
+from aiogram.types import LabeledPrice, PreCheckoutQuery
 from aiogram.filters import Command
-from config.settings import get_translation
-from database.database import *
 from utils.utils import *
 from keyboards.keyboards import *
 from config.bot_setup import bot
@@ -10,8 +8,22 @@ from config.bot_setup import bot
 router = Router()
 
 
+# Вспомогательная функция для проверки типа чата
+async def is_private_chat(message: Message) -> bool:
+    return message.chat.type == "private"
+
+
+# Сообщение для случаев, когда чат не личный
+async def reply_only_private(message: Message):
+    return
+
+
 @router.message(Command("start"))
 async def say_hi(message: types.Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     telegram_id = message.from_user.id
     username = message.from_user.username
     session = SessionLocal()
@@ -22,21 +34,27 @@ async def say_hi(message: types.Message):
         else:
             user.step = "START"
             session.commit()
-        await bot.forward_message(chat_id=message.chat.id, from_chat_id=CHANNEL_ID, message_id=VIDEO_MESSAGE_ID)
+        await bot.copy_message(chat_id=message.chat.id, from_chat_id=CHANNEL_ID, message_id=VIDEO_MESSAGE_ID)
         await message.reply(get_translation('start_message'), reply_markup=main_keys, parse_mode='HTML')
+        await message.answer(get_translation('start_gift_text'),parse_mode='HTML')
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("start", message, e))
     finally:
         session.close()
 
+
 @router.message(lambda message: message.text == PREMIUM_KEY)
 async def handle_premium(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id, 'START')
         if not user:
             user = check_user_and_state(session, message.from_user.id)
-            if not user:  
+            if not user:
                 await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
@@ -50,14 +68,19 @@ async def handle_premium(message: Message):
     finally:
         session.close()
 
+
 @router.message(lambda message: message.text == SURE_OK)
 async def handle_payment(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id, 'PREMIUM_WARNING_HANDLER')
         if not user:
             user = check_user_and_state(session, message.from_user.id)
-            if not user: 
+            if not user:
                 await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
@@ -71,14 +94,19 @@ async def handle_payment(message: Message):
     finally:
         session.close()
 
+
 @router.message(lambda message: message.text in [CLICK_BUTTON, PAYME])
 async def handle_alright(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id, 'PAYMENT')
         if not user:
             user = check_user_and_state(session, message.from_user.id)
-            if not user:  
+            if not user:
                 await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
 
@@ -87,7 +115,7 @@ async def handle_alright(message: Message):
             '💳 click': CLICK_TOKEN,
             '💳 payme': PAYME_TOKEN
         }
-        
+
         user.step = 'PREMIUM_ALRIGHT_HANDLER'
         session.commit()
 
@@ -107,6 +135,7 @@ async def handle_alright(message: Message):
     finally:
         session.close()
 
+
 @router.pre_checkout_query(lambda _: True)
 async def pre_checkout_handler(pre_checkout_query: PreCheckoutQuery, bot: Bot):
     try:
@@ -114,14 +143,19 @@ async def pre_checkout_handler(pre_checkout_query: PreCheckoutQuery, bot: Bot):
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("pre-checkout", None, e, pre_checkout_query.id))
 
+
 @router.message(lambda message: message.successful_payment is not None)
 async def successful_payment_handler(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id, 'PREMIUM_ALRIGHT_HANDLER')
         if not user:
             user = check_user_and_state(session, message.from_user.id)
-            if not user: 
+            if not user:
                 await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
@@ -130,7 +164,7 @@ async def successful_payment_handler(message: Message):
         total_price = message.successful_payment.total_amount / 100
         payment_type = message.successful_payment.invoice_payload
         generated_link = await generate_one_time_link(bot, LINK_CHANNEL_ID)
-        
+
         payment_movement_id = add_payement_movement(
             message.from_user.id,
             generated_link,
@@ -141,23 +175,30 @@ async def successful_payment_handler(message: Message):
         user.step = 'START'
         session.commit()
 
-        await message.reply(get_translation('success_message').replace(':link',generated_link), parse_mode='HTML', reply_markup=main_keys)
+        await message.reply(get_translation('success_message').replace(':link', generated_link), parse_mode='HTML',
+                            reply_markup=main_keys)
         await message.answer(generated_link)
-        
-        await bot.send_message(ADMIN_ID, format_payment_success(message, total_price, payment_type, generated_link, payment_movement_id))
+
+        await bot.send_message(PAYMENTS_GROUP_ID, format_payment_success(message, total_price, payment_type, generated_link,
+                                                                payment_movement_id))
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("payment success", message, e))
     finally:
         session.close()
 
+
 @router.message(lambda message: message.text == SMM_KEY)
 async def handle_smm(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id, 'START')
         if not user:
             user = check_user_and_state(session, message.from_user.id)
-            if not user:  
+            if not user:
                 await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
@@ -170,33 +211,66 @@ async def handle_smm(message: Message):
         session.close()
 
 
-@router.message(lambda message: message.text == CONSULTATION_KEY)
-async def handle_consulting(message: Message):
+@router.message(lambda message: message.text == GIFT_KEY)
+async def handle_gift(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id, 'START')
         if not user:
             user = check_user_and_state(session, message.from_user.id)
-            if not user:  
+            if not user:
+                await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
+                return
+            await send_state_message(message, user)
+            return
+        send = await bot.copy_message(chat_id=message.chat.id, from_chat_id=CHANNEL_ID, message_id=PDF_MESSAGE_ID)
+        await message.answer(get_translation('gift_text'), parse_mode='HTML',reply_to_message_id=send.message_id)
+    except Exception as e:
+        await bot.send_message(ADMIN_ID, format_error("GIFT handler", message, e))
+    finally:
+        session.close()
+
+
+@router.message(lambda message: message.text == CONSULTATION_KEY)
+async def handle_consulting(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
+    session = SessionLocal()
+    try:
+        user = check_user_and_state(session, message.from_user.id, 'START')
+        if not user:
+            user = check_user_and_state(session, message.from_user.id)
+            if not user:
                 await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
             return
 
-        await message.reply(get_translation('consultation_message'), parse_mode='HTML', reply_markup=consultation_button)
+        await message.reply(get_translation('consultation_message'), parse_mode='HTML',
+                            reply_markup=consultation_button)
     except Exception as e:
         await bot.send_message(ADMIN_ID, format_error("SMM handler", message, e))
     finally:
         session.close()
 
+
 @router.message(lambda message: message.text == CONTACT)
 async def handle_contact(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id, 'START')
         if not user:
             user = check_user_and_state(session, message.from_user.id)
-            if not user:  
+            if not user:
                 await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
                 return
             await send_state_message(message, user)
@@ -208,19 +282,24 @@ async def handle_contact(message: Message):
     finally:
         session.close()
 
+
 @router.message(lambda message: message.text in [SURE_NOT, BACK])
 async def handle_back(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id)
-        if not user:  
+        if not user:
             await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
             return
 
         if message.text == BACK:
             user.step = 'PREMIUM_WARNING_HANDLER'
             await message.reply(get_translation('warning_message'), parse_mode='HTML', reply_markup=sure_buttons)
-        else:  
+        else:
             user.step = 'START'
             await message.reply(get_translation('start_message'), parse_mode='HTML', reply_markup=main_keys)
 
@@ -233,10 +312,14 @@ async def handle_back(message: Message):
 
 @router.message()
 async def fallback_handler(message: Message):
+    if not await is_private_chat(message):
+        await reply_only_private(message)
+        return
+
     session = SessionLocal()
     try:
         user = check_user_and_state(session, message.from_user.id)
-        if not user: 
+        if not user:
             await message.reply(get_translation('wrong_command_message'), parse_mode='HTML')
             return
 
@@ -249,4 +332,3 @@ async def fallback_handler(message: Message):
         await bot.send_message(ADMIN_ID, format_error("fallback", message, e))
     finally:
         session.close()
-
